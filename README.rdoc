@@ -1,0 +1,11 @@
+= DESCRIPTION:
+
+a cookbook for installing cpanminus
+includes recipe for using cpanminus to add CPAN modules
+
+= REQUIREMENTS:
+
+= ATTRIBUTES:
+
+= USAGE:
+
