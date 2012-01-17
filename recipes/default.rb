@@ -6,3 +6,9 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+
+
+# Install cpan minus from source
+execute "get_cpanmin" do
+	command "curl -L http://cpanmin.us | perl - --sudo App::cpanminus" 
+end
