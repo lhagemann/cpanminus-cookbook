@@ -5,11 +5,6 @@ a cookbook for installing cpanminus
 
 includes recipe for using cpanminus to add CPAN modules
 
-REQUIREMENTS:
-=============
-
-* curl
-
 Should run on any platform, tested on MacOSX and Debian
 
 ATTRIBUTES:
@@ -23,13 +18,20 @@ RECIPES
 default
 -------
 
-The default recipe uses curl to install `App::cpanminus` from source
+The default recipe installs cpanminus from http://cpanmin.us
+
+No tests will be performed unless node['cpanminus']['test_self'] is true
+Man pages will be installed unless node['cpanminus']['man_pages'] is false
 
 install_mods
 ------------
 
 Reads the list of mods from `node['cpanminus']['mod_list']` and installs them
 using `cpanminus`
+
+All tests will be performed unless node['cpanminus']['test_others'] is false
+Man pages will be installed unless node['cpanminus']['man_pages'] is false
+
 
 
 License and Author
