@@ -23,6 +23,15 @@ mod_list = node['cpanminus']['mod_list']
 
 mod_list.each do |mod|
 	execute "install_#{mod}" do 
-	  command "sudo cpanm #{mod}"
+		# I'm not sure why SUDO was here before.... if it's necessary --sudo is better
+		# and probably via node['cpanminus']['sudo']
+		cmd = "cpanm #mod"
+		if node['cpanminus']['test_others'] == false
+			cmd += " --notest"
+		end
+		if node['cpanminus']['man_pages'] == false
+			cmd += " --no-man-pages"
+		end
+		command cmd
 	end
 end
