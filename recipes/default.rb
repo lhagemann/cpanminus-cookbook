@@ -19,6 +19,37 @@
 
 
 # Install cpan minus from source
-execute "get_cpanmin" do
-	command "curl -L http://cpanmin.us | perl - --sudo App::cpanminus" 
+chef_cache = Chef::Config[:file_cache_path]
+remote_file "cpanm-source" do
+	action :nothing
+	path "#{chef_cache}/cpanm-source"
+	source node['cpanminus']['source']
+end
+
+execute "cpanminus install" do
+	action :nothing
+	## there are odd cases when cpanm deleted but package info still there...
+	## to prevent those we'll force reinstall if cpanm not found
+	cmd = "perl #{chef_cache}/cpanm-source --reinstall App::cpanminus"
+	if node['cpanminus']['test_self'] == false
+		cmd += " --notest"
+	end
+	if node['cpanminus']['man_pages'] == false
+		cmd += " --no-man-pages"
+	end
+	command cmd
+end
+
+## I wonder if there is better cheat to check condition once for two resources than ruby_block
+ruby_block "check if installed" do
+	if node['cpanminus']['path'] != ''
+		not_if "ls #{node['cpanminus']['path']}/cpanm >/dev/null 2>&1"
+	else
+		not_if "which cpanm >/dev/null 2>&1"
+	end
+	notifies :create, "remote_file[cpanm-source]", :immediately
+	notifies :run, "execute[cpanminus install]", :immediately
+	block do
+		Chef::Log.info "Downloading and installing cpanminus"
+	end
 end
